@@ -4,7 +4,7 @@ on:
   repository_dispatch:
   workflow_dispatch:
   schedule:
-    - cron: '10 22 * * 4'
+    - cron: 10 22 * * 4
 
 jobs:
   build:
@@ -91,7 +91,7 @@ jobs:
         id: prepare_artifacts
         run: |
           mkdir -p ${{ matrix.soc }}_out
-          cp openwrt-${{ matrix.soc }}/.config ${{ matrix.soc }}_out/${{ matrix.model }}.config
+          cp openwrt-${{ matrix.model }}/.config ${{ matrix.soc }}_out/${{ matrix.model }}.config
           getmd5()
           {
           md5sum=`md5sum $1`
@@ -99,7 +99,7 @@ jobs:
           md5=`echo ${md5:0:10}`
           }
 
-          rom=openwrt-${{ matrix.soc }}/bin/targets/mediatek/${{ matrix.soc }}/${{ matrix.output_file }}
+          rom=openwrt-${{ matrix.model }}/bin/targets/mediatek/${{ matrix.soc }}/${{ matrix.output_file }}
           getmd5 $rom        
           cp -a $rom ./${{ matrix.soc }}_out/${{ matrix.release_prefix }}-5.4-$(date +%Y%m%d)_${md5}.${{ matrix.output_suffix }}
 
