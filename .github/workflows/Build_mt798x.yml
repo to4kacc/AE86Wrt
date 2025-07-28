@@ -120,12 +120,9 @@ jobs:
           md5=`echo ${md5:0:10}`
           }
 
-          rom=openwrt-${{ matrix.soc }}/bin/targets/mediatek/${{ matrix.soc }}/${{ matrix.output_file }}
+          rom=openwrt-${{ matrix.soc }}/bin/targets/mediatek/${{ matrix.soc }}/${{ matrix.models.output_file }}
           getmd5 $rom        
-          cp -a $rom ./${{ matrix.soc }}_out/AE86Wrt-${{ matrix.name }}-5.4-$(date +%Y%m%d)_${md5}.bin
-
-        env:
-          MODELS: ${{ join(matrix.models[*].file, '" "') }}
+          cp -a $rom ./${{ matrix.soc }}_out/AE86Wrt-${{ matrix.models.name }}-5.4-$(date +%Y%m%d)_${md5}.bin
 
       - name: Upload Firmware Artifacts
         uses: actions/upload-artifact@main
