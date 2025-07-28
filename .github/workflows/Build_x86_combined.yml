@@ -120,6 +120,13 @@ jobs:
             config_file: "./configs/X86/x86_612.config"
             config_name: "x86_612.config"
             output_dir: "X86_Out_612"
+
+          - kernel_version: "R24.10"
+            repo_url: "https://github.com/openwrt/openwrt"
+            repo_branch: "openwrt-24.10"
+            config_file: "./configs/X86/x86_r2410.config"
+            config_name: "x86_r2410.config"
+            output_dir: "X86_Out_R24.10"
     
     name: Build_x86_${{ matrix.kernel_version }}
     runs-on: ubuntu-latest
@@ -149,6 +156,7 @@ jobs:
           artifacts: |
             artifacts/AE86Wrt-X86-5.4/*.img.gz
             artifacts/AE86Wrt-X86-6.12/*.img.gz
+            artifacts/AE86Wrt-X86-R24.10/*.img.gz
           name: ${{ steps.generate_name.outputs.release_name }}
           tag: ${{ steps.generate_name.outputs.release_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
