@@ -138,7 +138,7 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release_assets
-          find downloaded_artifacts -name "*.bin" -o -name "*.tar" -exec cp {} release_assets \;
+          find downloaded_artifacts \( -name "*.bin" -o -name "*.tar" \) -exec cp {} release_assets \;
 
       - name: Generate release info
         id: release_info

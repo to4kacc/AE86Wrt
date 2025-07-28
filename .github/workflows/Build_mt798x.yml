@@ -120,9 +120,19 @@ jobs:
           md5=`echo ${md5:0:10}`
           }
 
-          rom=openwrt-${{ matrix.soc }}/bin/targets/mediatek/${{ matrix.soc }}/${{ matrix.models.output_file }}
-          getmd5 $rom        
-          cp -a $rom ./${{ matrix.soc }}_out/AE86Wrt-${{ matrix.models.name }}-5.4-$(date +%Y%m%d)_${md5}.bin
+          for model in '${{ toJSON(matrix.models) }}' | jq -c '.[]'; do
+            name=$(echo "$model" | jq -r '.name')
+            output_file=$(echo "$model" | jq -r '.output_file')
+            rom="openwrt-${{ matrix.soc }}/bin/targets/mediatek/${{ matrix.soc }}/$output_file"
+      
+            if [ -f "$rom" ]; then
+              getmd5 "$rom"
+              cp -a "$rom" "./${{ matrix.soc }}_out/AE86Wrt-$name-5.4-$(date +%Y%m%d)_${md5}.bin"
+            else
+              echo "⚠️ 文件不存在: $rom"
+            fi
+          done
+
 
       - name: Upload Firmware Artifacts
         uses: actions/upload-artifact@main
@@ -156,7 +166,7 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release_assets
-          find downloaded_artifacts -name "*.bin" -exec cp {} release_assets \;
+          find downloaded_artifacts -type f -name "*.bin" -exec cp {} release_assets \;
 
       - name: Generate release info
         id: release_info
