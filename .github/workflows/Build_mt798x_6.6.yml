@@ -82,6 +82,7 @@ jobs:
       - name: Build firmware
         working-directory: ./openwrt-${{ matrix.type || matrix.model }}
         run: |
+          rm target/linux/mediatek/patches-6.6/613-netfilter-optional-tcp-window-check.patch
           make -j$(nproc) V=s
       
       - name: Prepare artifacts
