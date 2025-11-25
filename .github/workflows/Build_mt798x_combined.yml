@@ -167,9 +167,9 @@ jobs:
             fi
           fi
       
-    - name: 🚀 上传到 Release
-      uses: softprops/action-gh-release@v2.2.1
-      with:
+      - name: 🚀 上传到 Release
+        uses: softprops/action-gh-release@v2.2.1
+         with:
         tag_name: iStoreOS-${{ env.VERSION }}-RELEASE-${{ inputs.network_settings }}
         body: |
           📌 版本： iStoreOS-${{ env.VERSION }}-RELEASE（imagebuilder构建，稳定版）
@@ -187,5 +187,5 @@ jobs:
           🌐 IP： ${{ inputs.network_settings == 'static' && inputs.ipaddr || '单网口-动态获取（从上级路由找寻）；多网口-IP：192.168.100.1' }}
         files: |
           imagebuilder/bin/targets/armsr/armv8/*generic-rootfs.tar.gz
-      env:
+        env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
