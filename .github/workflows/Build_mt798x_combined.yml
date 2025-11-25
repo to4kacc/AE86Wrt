@@ -167,50 +167,25 @@ jobs:
             fi
           fi
       
-      - name: Upload Firmware Artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ matrix.soc || matrix.model }}-Firmware
-          path: ${{ matrix.soc || matrix.model }}_out/AE86Wrt-*
-      
-      - name: Upload Config Artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ matrix.soc || matrix.model }}-config
-          path: ${{ matrix.soc || matrix.model }}_out/${{ matrix.soc || matrix.model }}.config
-      
-      - name: Upload Packages Artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ matrix.soc || matrix.model }}-Packages
-          path: openwrt-${{ matrix.soc || matrix.model }}/bin/packages/*
-  
-  release:
-    name: Create Release
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@main
-        with:
-          path: downloaded_artifacts
-      
-      - name: Prepare release assets
-        run: |
-          mkdir -p release_assets
-          find downloaded_artifacts \( -name "*.bin" -o -name "*.tar" \) -exec cp {} release_assets \;
-      
-      - name: Generate release info
-        id: release_info
-        run: |
-          echo "release_tag=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-          echo "release_name=AE86Wrt-MT798x-5.4内核-$(date +%Y%m%d)" >> $GITHUB_OUTPUT
-      
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.release_info.outputs.release_tag }}
-          name: ${{ steps.release_info.outputs.release_name }}
-          files: |
-            release_assets/*
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: 🚀 上传到 Release
+      uses: softprops/action-gh-release@v2.2.1
+      with:
+        tag_name: iStoreOS-${{ env.VERSION }}-RELEASE-${{ inputs.network_settings }}
+        body: |
+          📌 版本： iStoreOS-${{ env.VERSION }}-RELEASE（imagebuilder构建，稳定版）
+          
+          📂 来源： https://fw.koolcenter.com/iStoreOS/ib/armsr/
+          
+          🧠 内核： Please Login to iStoreOS → System → Amlogic Service → Replace the Kernel
+          
+          🧩 集成： 包含了基础系统组件、驱动、网络工具、容器支持、LuCI界面及插件等。与官方集成列表基本一致
+          
+          👤 用户名： root
+          
+          🔒 密码： 无
+          
+          🌐 IP： ${{ inputs.network_settings == 'static' && inputs.ipaddr || '单网口-动态获取（从上级路由找寻）；多网口-IP：192.168.100.1' }}
+        files: |
+          imagebuilder/bin/targets/armsr/armv8/*generic-rootfs.tar.gz
+      env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
