@@ -59,14 +59,6 @@ jobs:
             diy_script: "op"
             type: "op2512"
 
-          - name: "X86-R25.12-6.18"
-            repo_url: "https://github.com/Lienol/openwrt"
-            repo_branch: "25.12"
-            kernel_ver: "6.18"
-            config_file: "./configs/X86/x86_r2512.config"
-            file_name: "x86_r2512_618"
-            diy_script: "op"
-            type: "op2512"
 
     steps:
     - name: Checkout
